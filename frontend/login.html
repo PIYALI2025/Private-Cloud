@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Private Cloud - Login</title>
+    <!-- Tailwind CSS v3 via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex items-center justify-center font-sans selection:bg-brand-500 selection:text-white">
+    
+    <div class="glass w-full max-w-md rounded-2xl p-8 shadow-2xl fade-in relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-500 to-indigo-500"></div>
+        
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold tracking-tight text-white mb-2">Vault Access</h1>
+            <p class="text-slate-400 text-sm">Secure Private Cloud Storage</p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="flex mb-6 bg-slate-800 rounded-lg p-1">
+            <button id="tab-login" class="flex-1 py-2 text-sm font-medium rounded-md bg-slate-700 text-white shadow transition-all" onclick="Auth.switchTab('login')">Login</button>
+            <button id="tab-signup" class="flex-1 py-2 text-sm font-medium rounded-md text-slate-400 hover:text-white transition-all" onclick="Auth.switchTab('signup')">Sign Up</button>
+        </div>
+
+        <!-- Form -->
+        <form id="auth-form" onsubmit="Auth.handleSubmit(event)" class="space-y-4">
+            <div>
+                <label for="username" class="block text-sm font-medium text-slate-300 mb-1">Username</label>
+                <input type="text" id="username" required 
+                    class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
+                    placeholder="Enter your username">
+            </div>
+            
+            <div>
+                <label for="password" class="block text-sm font-medium text-slate-300 mb-1">Password</label>
+                <input type="password" id="password" required 
+                    class="w-full bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
+                    placeholder="••••••••">
+            </div>
+
+            <button type="submit" id="submit-btn" 
+                class="w-full mt-6 bg-brand-600 hover:bg-brand-500 text-white font-medium py-2.5 rounded-lg transition-colors flex justify-center items-center gap-2">
+                <span id="submit-text">Login to Vault</span>
+                <svg id="submit-spinner" class="animate-spin h-5 w-5 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+            </button>
+        </form>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>

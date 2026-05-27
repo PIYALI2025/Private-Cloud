@@ -1,0 +1,7 @@
+x= int(input("Enter selling price:"))
+y = int(input("Enter purchase price:"))
+z = int(input("Quantity:"))
+a = int(input("Net weight of each packet:"))
+w = z*a
+pr = ((x-y)/1000)*w
+print("Net Profit from the",x,"/kg Rs tea is:",pr)

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Private Cloud - Dashboard</title>
+    <!-- Tailwind CSS v3 via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans">
+    
+    <!-- Top Navigation -->
+    <nav class="bg-slate-800 border-b border-slate-700 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded bg-gradient-to-br from-brand-500 to-indigo-500 flex items-center justify-center shadow-lg">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>
+                    </div>
+                    <span class="text-xl font-bold tracking-tight text-white">Private Cloud</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <!-- User Profile Photo & Upload -->
+                    <div class="flex items-center gap-2 group cursor-pointer relative" onclick="Dashboard.openProfileModal()" title="Change Profile Photo">
+                        <img id="nav-profile-img" src="images/default-avatar.png" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=user'" class="w-8 h-8 rounded-full border border-slate-600 object-cover hover:border-brand-500 transition-colors">
+                        <span id="nav-username" class="text-sm font-semibold text-slate-300 hidden sm:inline">User</span>
+                    </div>
+                    
+                    <button onclick="Dashboard.openDiscoveryModal()" class="p-2 text-slate-400 hover:text-white transition-colors" title="Discover Users">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
+                    </button>
+                    <button onclick="Dashboard.openRequestsModal()" class="relative p-2 text-slate-400 hover:text-white transition-colors" title="Notifications">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                        <span id="requests-badge" class="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full hidden"></span>
+                    </button>
+                    <button onclick="Utils.logout()" class="text-sm font-medium text-slate-400 hover:text-white transition-colors bg-slate-700 hover:bg-slate-600 px-3 py-1.5 rounded-md">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Upload Section -->
+        <div class="mb-10 fade-in" style="animation-delay: 0.1s;">
+            <div id="drop-zone" class="border-2 border-dashed border-slate-600 rounded-xl p-12 text-center transition-all bg-slate-800/50 hover:bg-slate-800 cursor-pointer relative overflow-hidden group">
+                <!-- Overlay for uploading state -->
+                <div id="upload-overlay" class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm z-10 flex flex-col items-center justify-center hidden">
+                    <svg class="spin-slow h-10 w-10 text-brand-500 mb-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <p class="text-brand-400 font-medium tracking-wide">Encrypting & Uploading...</p>
+                </div>
+
+                <div class="flex flex-col items-center">
+                    <div class="w-16 h-16 bg-slate-700 text-slate-300 rounded-full flex items-center justify-center mb-4 group-hover:bg-brand-500 group-hover:text-white transition-colors">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                    </div>
+                    <h3 class="text-lg font-medium text-white mb-1">Drag and drop your files here</h3>
+                    <p class="text-sm text-slate-400 mb-4">Or click to browse your computer</p>
+                    <input type="file" id="file-input" class="hidden" multiple>
+                    <button onclick="document.getElementById('file-input').click()" class="bg-slate-700 hover:bg-slate-600 text-white font-medium py-2 px-6 rounded-lg transition-colors text-sm">
+                        Select Files
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- File Grid Section -->
+        <div class="fade-in" style="animation-delay: 0.2s;">
+            <div class="flex justify-between items-end mb-6">
+                <div class="flex items-center gap-6">
+                    <button id="tab-my-vault" onclick="Dashboard.switchTab('my-vault')" class="text-2xl font-bold text-white tracking-tight border-b-2 border-brand-500 pb-1 focus:outline-none transition-all">Your Vault</button>
+                    <button id="tab-shared-workspace" onclick="Dashboard.switchTab('shared')" class="text-2xl font-bold text-slate-400 hover:text-white tracking-tight pb-1 border-b-2 border-transparent focus:outline-none transition-all">Shared Workspace</button>
+                </div>
+                
+                <!-- Simple Search -->
+                <div class="relative w-64">
+                    <input type="text" id="search-input" placeholder="Search files..." class="w-full bg-slate-800 border border-slate-700 rounded-lg pl-10 pr-4 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all">
+                    <svg class="w-4 h-4 text-slate-500 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </div>
+            </div>
+
+            <!-- Grid container -->
+            <div id="file-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Skeleton Loading -->
+                <div class="animate-pulse bg-slate-800 rounded-xl h-48 border border-slate-700"></div>
+                <div class="animate-pulse bg-slate-800 rounded-xl h-48 border border-slate-700"></div>
+                <div class="animate-pulse bg-slate-800 rounded-xl h-48 border border-slate-700"></div>
+                <div class="animate-pulse bg-slate-800 rounded-xl h-48 border border-slate-700"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Requests Modal -->
+    <div id="requests-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+        <div class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm" onclick="Dashboard.closeRequestsModal()"></div>
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-2xl max-h-[80vh] flex flex-col relative z-10 shadow-2xl transform scale-95 transition-transform origin-center" id="requests-modal-content">
+            
+            <div class="flex justify-between items-center p-6 border-b border-slate-700">
+                <h3 class="text-lg font-bold text-white">Access Requests Inbox</h3>
+                <button onclick="Dashboard.closeRequestsModal()" class="text-slate-400 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            
+            <div class="p-6 overflow-y-auto flex-1 custom-scrollbar">
+                <div id="requests-list" class="space-y-4">
+                    <!-- Requests injected here -->
+                    <div class="text-center py-8 text-slate-500">Loading requests...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit File Modal -->
+    <div id="edit-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+        <div class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm" onclick="Dashboard.closeEditModal()"></div>
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-md p-6 relative z-10 shadow-2xl">
+            <h3 class="text-lg font-bold text-white mb-4">Rename File</h3>
+            <input type="text" id="edit-filename-input" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white mb-6 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all">
+            <input type="hidden" id="edit-file-id">
+            <div class="flex justify-end gap-3">
+                <button onclick="Dashboard.closeEditModal()" class="px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition-colors">Cancel</button>
+                <button onclick="Dashboard.saveRename()" class="px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-500 text-white font-medium transition-colors">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profile-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+        <div class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm" onclick="Dashboard.closeProfileModal()"></div>
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-sm p-6 relative z-10 shadow-2xl flex flex-col text-center">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-white">Update Profile Photo</h3>
+                <button onclick="Dashboard.closeProfileModal()" class="text-slate-400 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            
+            <div class="flex flex-col items-center gap-4 py-4">
+                <img id="modal-profile-img" src="images/default-avatar.png" onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=user'" class="w-24 h-24 rounded-full border-2 border-slate-600 object-cover">
+                <p class="text-sm text-slate-400">Upload a new photo for your profile avatar.</p>
+                <input type="file" id="profile-photo-input" class="hidden" accept="image/*" onchange="Dashboard.handleProfilePhotoUpload(this.files)">
+                <button onclick="document.getElementById('profile-photo-input').click()" class="bg-brand-600 hover:bg-brand-500 text-white font-medium py-2 px-6 rounded-lg transition-colors text-sm">
+                    Select Image
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Discovery Modal -->
+    <div id="discovery-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+        <div class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm" onclick="Dashboard.closeDiscoveryModal()"></div>
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-md p-6 relative z-10 shadow-2xl flex flex-col max-h-[80vh]">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-white">Find Users & Request Access</h3>
+                <button onclick="Dashboard.closeDiscoveryModal()" class="text-slate-400 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div class="relative mb-4">
+                <input type="text" id="user-search-input" placeholder="Search by username..." class="w-full bg-slate-900 border border-slate-700 rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all">
+                <svg class="w-5 h-5 text-slate-500 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </div>
+            
+            <!-- User search list -->
+            <div id="user-search-results" class="overflow-y-auto flex-1 custom-scrollbar space-y-2 mb-4">
+                <div class="text-center py-6 text-slate-500 text-sm">Type a name to search...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Multiple Choices Modal -->
+    <div id="choices-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
+        <div class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm" onclick="Dashboard.closeChoicesModal()"></div>
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-md p-6 relative z-10 shadow-2xl">
+            <h3 class="text-lg font-bold text-white mb-2">Multiple Files Found</h3>
+            <p class="text-xs text-slate-400 mb-4">Multiple files match your query. Please select the correct file to request:</p>
+            <div id="choices-container" class="space-y-2 max-h-60 overflow-y-auto mb-6 custom-scrollbar">
+                <!-- Choices injected here -->
+            </div>
+            <div class="flex justify-end gap-3">
+                <button onclick="Dashboard.closeChoicesModal()" class="px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-700 transition-colors text-sm">Cancel</button>
+                <button onclick="Dashboard.submitSelectedChoice()" class="px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-500 text-white font-medium transition-colors text-sm">Submit Request</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="js/utils.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

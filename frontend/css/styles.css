@@ -1,0 +1,74 @@
+/* Custom styles built on top of Tailwind CSS */
+
+/* Micro-animations */
+.fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.spin-slow {
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Drag and drop active state */
+.drag-active {
+    border-color: #3b82f6 !important; /* Tailwind blue-500 */
+    background-color: rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Toast container */
+#toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.toast {
+    min-width: 250px;
+    padding: 16px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast.success {
+    background-color: #10b981; /* Tailwind emerald-500 */
+}
+
+.toast.error {
+    background-color: #ef4444; /* Tailwind red-500 */
+}
+
+.toast.info {
+    background-color: #3b82f6; /* Tailwind blue-500 */
+}
+
+/* Glassmorphism utilities */
+.glass {
+    background: rgba(30, 41, 59, 0.7); /* slate-800 with opacity */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}

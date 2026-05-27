@@ -1,0 +1,21 @@
+# Web Framework
+fastapi
+uvicorn
+
+# Database & ORM
+sqlalchemy
+psycopg2-binary  # For PostgreSQL deployment later
+python-dotenv    # To read your .env file
+
+# Security & Auth
+passlib[bcrypt]  # For password hashing
+python-jose[cryptography]  # For JWT tokens
+python-multipart # To handle file uploads in FastAPI
+
+# Cloud & Storage
+python-magic; sys_platform != 'win32'  # For binary file type detection (MIME)
+python-magic-bin; sys_platform == 'win32' # For binary file type detection on Windows
+
+# Utilities
+pydantic
+pydantic-settings
